@@ -1,6 +1,6 @@
 {
     "name": "Sensibo",
-    "docs": "https://gitlab.com/wxti-customers/sensibo-poly",
+    "docs": "https://github.com/iproptech/Poly",
     "type": "python3",
     "executable": "sensibo_poly.py",
     "install": "install.sh",
@@ -12,11 +12,11 @@
     "credits": [
         {
             "title": "Sensibo",
-            "author": "Elberte Agostinho",
+            "author": "Engenharia de web",
             "version": "1.0.0",
             "date": "March 25, 2020",
-            "source": "https://gitlab.com/wxti-customers/sensibo-poly",
-            "license": "https://gitlab.com/wxti-customers/sensibo-poly/-/blob/master/LICENSE"
+            "source": "https://github.com/iproptech/Poly.git",
+            "license": "https://github.com/iproptech/Poly/blob/master/LICENSE"
         }
     ]
 }
