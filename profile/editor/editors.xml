@@ -1,0 +1,29 @@
+<editors>
+    <editor id="bool">
+        <range uom="2" subset="0,1" />
+    </editor>
+
+    <editor id="temperature">
+        <range uom="56" min="18" max="30" prec="0" step="1" />
+    </editor>
+
+    <editor id="fan">
+        <range uom="25" subset="0-3" nls="FAN" />
+    </editor>
+
+    <editor id="humidity">
+        <range uom="51" />
+    </editor>
+
+    <editor id="mode">
+        <range uom="25" subset="0-2" nls="MODE" />
+    </editor>
+
+    <editor id="power">
+        <range uom="25" subset="0,1" nls="POWER" />
+    </editor>
+
+    <editor id="seconds">
+        <range uom="57"/>
+    </editor>
+</editors>

@@ -1,0 +1,43 @@
+<nodeDefs>
+    <nodeDef id="controller" nls="ctl">
+        <editors />
+        <sts>
+            <st id="ST" editor="bool" />
+        </sts>
+        <cmds>
+            <sends />
+            <accepts>
+                <cmd id="DISCOVER" />
+            </accepts>
+        </cmds>
+    </nodeDef>
+    <nodeDef id="sensibo" nls="sensibo">
+        <editors />
+        <sts>
+            <st id="GV0" editor="bool" />
+            <st id="GV1" editor="seconds" />
+            <st id="GV2" editor="temperature" />
+            <st id="ST" editor="power" />
+            <st id="CLIFRS" editor="fan" />
+            <st id="CLITEMP" editor="temperature" />
+            <st id="CLIHUM" editor="humidity" />
+            <st id="CLIMD" editor="mode" />
+        </sts>
+        <cmds>
+            <sends />
+            <accepts>
+                <cmd id="DON" />
+                <cmd id="DOF" />
+                <cmd id="SET_TEMPERATURE">
+                    <p id="" editor="temperature" />
+                </cmd>
+                <cmd id="SET_FAN">
+                    <p id="" editor="fan" />
+                </cmd>
+                <cmd id="SET_MODE">
+                    <p id="" editor="mode" />
+                </cmd>
+            </accepts>
+        </cmds>
+    </nodeDef>
+</nodeDefs>

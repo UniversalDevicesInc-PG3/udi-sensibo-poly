@@ -1,0 +1,37 @@
+# controller
+ND-controller-NAME = Sensibo Controller
+ND-controller-ICON = GenericCtl
+CMD-ctl-DISCOVER-NAME = Re-Discover Sensibo Devices
+ST-ctl-ST-NAME = NodeServer Online
+
+# sensibo node
+ND-sensibo-NAME = Sensible
+ND-sensibo-ICON = Thermostat
+ST-sensibo-ST-NAME = Power State
+ST-sensibo-CLIFRS-NAME = Fan Level
+ST-sensibo-CLITEMP-NAME = Current Temperature
+ST-sensibo-CLIHUM-NAME = Humidity
+ST-sensibo-CLIMD-NAME = Mode
+ST-sensibo-GV0-NAME = Sensibo Online
+ST-sensibo-GV1-NAME = Last Seen
+ST-sensibo-GV2-NAME = Target Temperature
+CMD-sensibo-SET_TEMPERATURE-NAME = Set Temperature
+CMD-sensibo-SET_FAN-NAME = Set Fan Level
+CMD-sensibo-SET_MODE-NAME = Set Mode
+CMD-sensibo-DON-NAME = On
+CMD-sensibo-DOF-NAME = Off
+
+# FAN enumerators
+FAN-0 = Low
+FAN-1 = Medium
+FAN-2 = High
+FAN-3 = Auto
+
+# POWER enumerators
+POWER-0 = Off
+POWER-1 = On
+
+# MODE enumerators
+MODE-0 = Cool
+MODE-1 = Heat
+MODE-2 = Fan
