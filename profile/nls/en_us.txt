@@ -5,7 +5,7 @@ CMD-ctl-DISCOVER-NAME = Re-Discover Sensibo Devices
 ST-ctl-ST-NAME = NodeServer Online
 
 # sensibo node
-ND-sensibo-NAME = Sensible
+ND-sensibo-NAME = Sensibo
 ND-sensibo-ICON = Thermostat
 ST-sensibo-ST-NAME = Power State
 ST-sensibo-CLIFRS-NAME = Fan Level

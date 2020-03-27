@@ -7,14 +7,14 @@
     "install_cloud": "install_cloud.sh",
     "description": "Sensibo Polyglot NodeServer",
     "notice": "",
-    "shortPoll": "30",
+    "shortPoll": "60",
     "longPoll": "600",
     "credits": [
         {
             "title": "Sensibo",
             "author": "Engenharia de web",
-            "version": "1.0.0",
-            "date": "March 25, 2020",
+            "version": "1.0.1",
+            "date": "March 27, 2020",
             "source": "https://github.com/iproptech/Poly.git",
             "license": "https://github.com/iproptech/Poly/blob/master/LICENSE"
         }
