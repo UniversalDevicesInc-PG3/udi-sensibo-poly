@@ -5,7 +5,7 @@ except:
 
 LOGGER = polyinterface.LOGGER
 
-FAN_LEVEL = ["low", "medium", "high", "auto"]
+FAN_LEVEL = ["low", "medium", "high", "auto", "not supported"]
 MODES = ['cool', 'heat', 'fan']
 MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
 
@@ -24,13 +24,17 @@ class SensiboNode(polyinterface.Node):
 
     def _update(self, data):
         self.setDriver('ST', 1 if data['acState']['on'] else 0)
-        self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
         self.setDriver('CLITEMP', data['measurements']['temperature'])
         self.setDriver('CLIHUM', data['measurements']['humidity'])
         self.setDriver('CLIMD', MODE_COUNTER[data['acState']['mode']])
         self.setDriver('GV0', 1 if data['connectionStatus']['isAlive'] else 0)
         self.setDriver('GV1', data['connectionStatus']['lastSeen']['secondsAgo'])
         self.setDriver('GV2', data['acState']['targetTemperature'])
+
+        if(data['acState']['fanLevel'] in FAN_LEVEL):
+            self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
+        else:
+            self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
 
     def _changeProperty(self, property, value):
         return self.api.update(self.deviceId, self.data['acState'], property, value)
