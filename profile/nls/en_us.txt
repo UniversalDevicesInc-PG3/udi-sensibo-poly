@@ -36,3 +36,5 @@ POWER-1 = On
 MODE-0 = Cool
 MODE-1 = Heat
 MODE-2 = Fan
+MODE-3 = Dry
+MODE-4 = Auto

@@ -6,7 +6,7 @@ except:
 LOGGER = polyinterface.LOGGER
 
 FAN_LEVEL = ["low", "medium", "high", "auto", "not supported"]
-MODES = ['cool', 'heat', 'fan']
+MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
 MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
 
 class SensiboNode(polyinterface.Node):
