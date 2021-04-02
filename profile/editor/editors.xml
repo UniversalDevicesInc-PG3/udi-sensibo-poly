@@ -12,7 +12,7 @@
     </editor>
 
     <editor id="humidity">
-        <range uom="51" />
+        <range uom="51" min="0" max="100" step="1" />
     </editor>
 
     <editor id="mode">
@@ -23,7 +23,7 @@
         <range uom="25" subset="0,1" nls="POWER" />
     </editor>
 
-    <editor id="seconds">
+    <editor id="seconds" min="0" max="99999" step="1">
         <range uom="57"/>
     </editor>
 </editors>
