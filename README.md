@@ -3,4 +3,4 @@ This is a simple integration of Sensibo pods to ISY994i. Please install via [Pol
 
 Release Notes:
 
-1.0.6 - Pods are now showing up in the STATUS (IF) list when creating a program.
+1.0.6 (Apr, 3rd 2021) - Pods are now showing up in the STATUS (IF) list when creating a program.
