@@ -23,7 +23,7 @@
         <range uom="25" subset="0,1" nls="POWER" />
     </editor>
 
-    <editor id="seconds" min="0" max="99999" step="1">
-        <range uom="57"/>
+    <editor id="seconds">
+        <range uom="57" min="0" max="99999" step="1"/>
     </editor>
 </editors>
