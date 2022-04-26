@@ -12,8 +12,8 @@
         {
             "title": "Sensibo",
             "author": "iprop.tech",
-            "version": "1.0.6",
-            "date": "March 27, 2020",
+            "version": "2.0.0",
+            "date": "April 26, 2022",
             "source": "https://github.com/UniversalDevicesInc-PG3/udi-sensibo-poly.git",
             "license": "https://github.com/UniversalDevicesInc-PG3/udi-sensibo-poly/blob/master/LICENSE"
         }
