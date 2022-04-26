@@ -1,26 +1,32 @@
-try:
-    import polyinterface
-except:
-    import pgc_interface as polyinterface
+import udi_interface
 
-LOGGER = polyinterface.LOGGER
+LOGGER = udi_interface.LOGGER
 
 FAN_LEVEL = ["low", "medium", "high", "auto", "not supported"]
 MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
 MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
 
-class SensiboNode(polyinterface.Node):
-    def __init__(self, controller, primary, address, data, api):
-        super().__init__(controller, primary, address, data['room']['name'])
+class SensiboNode(udi_interface.Node):
+    def __init__(self, polyglot, primary, address, data, api):
+        super().__init__(polyglot, primary, address, data['room']['name'])
+        self.poly = polyglot
         self.api = api
-        self.data = data
         self.deviceId = data['id']
+        self.data = data
         self._update(data)
 
-    def update(self, data):
-        for dv in data:
-            if dv['id'].lower() == self.address:
-                self._update(dv)
+        polyglot.subscribe(polyglot.POLL, self.update)
+
+    def update(self, pollflag):
+        if pollflag == 'shortPoll':
+            '''
+            Could we call self.api.device(self.deviceId) instead to just
+            get the info for the one device?
+            '''
+            devices = self.api.devices()
+            for dv in devices:
+                if dv['id'].lower() == self.address:
+                    self._update(dv)
 
     def _update(self, data):
         self.setDriver('ST', 1 if data['acState']['on'] else 0)
@@ -75,10 +81,10 @@ class SensiboNode(polyinterface.Node):
             LOGGER.debug('SET MODE: communication fail')
 
     drivers = [
-        {'driver': 'ST', 'value': 0, 'uom': 25},
-        {'driver': 'GV0', 'value': 0, 'uom': 2},
-        {'driver': 'GV1', 'value': 0, 'uom': 57},
-        {'driver': 'GV2', 'value': 0, 'uom': 25},
+        {'driver': 'ST', 'value': 0, 'uom': 25},       # device state
+        {'driver': 'GV0', 'value': 0, 'uom': 2},       # connection status
+        {'driver': 'GV1', 'value': 0, 'uom': 57},      # connection last seen
+        {'driver': 'GV2', 'value': 0, 'uom': 25},      # target temperature
         {'driver': 'CLIFRS', 'value': 0, 'uom': 25},
         {'driver': 'CLITEMP', 'value': 10, 'uom': 56},
         {'driver': 'CLIHUM', 'value': 0, 'uom': 51},

@@ -1,50 +1,32 @@
 #!/usr/bin/env python3
 
-try:
-    import polyinterface
-except:
-    import pgc_interface as polyinterface
-
+import udi_interface
 import json
-
 from sensibo_api import SensiboAPI
 from sensibo_node import SensiboNode
 
-LOGGER = polyinterface.LOGGER
+LOGGER = udi_interface.LOGGER
 
-class Controller(polyinterface.Controller):
+class Controller(object):
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
         self.name = 'Sensibo Controller'
-        self.api_key = 'YourApiKey'
+        self.api_key = ''
         self.scanning = False
+        self.poly = polyglot
+
+        polyglot.subscribe(polyglot.CUSTOMPARAMS, self.parameterHandler)
+        polyglot.subscribe(polyglot.DISCOVER, self.discover)
     
-    def start(self):
-        LOGGER.info('Sensibo NodeServer Starting')
-        self.check_params()
-        self.setDriver('ST', 1)
-        LOGGER.info('Sensibo NodeServer Started')
+    def parameterHandler(self, params):
+        self.poly.Notices.clear()
 
-    def shortPoll(self):
-        if(self.scanning):
-            LOGGER.info('Skipping shortPoll() - NodeServer in scanning mode')
+        if 'api_key' in params and params['api_key'] != '':
+            self.api_key = params['api_key']
+            self.discover()
         else:
-            sensibo = SensiboAPI(self.api_key)
-            devices = sensibo.devices()
-            for node in self.nodes:
-                self.nodes[node].update(devices)
+            self.poly.Notices['api'] = 'Please define Sensibo API key'
 
-    def longPoll(self):
-        if(self.scanning):
-            LOGGER.info('Skipping longPoll() - NodeServer in scanning mode')
-        else:
-            sensibo = SensiboAPI(self.api_key)
-            devices = sensibo.devices()
-            for node in self.nodes:
-                self.nodes[node].update(devices)
-
-    def query(self):
-        self.reportDrivers()
 
     def discover(self, *args, **kwargs):
         self.scanning = True
@@ -54,10 +36,11 @@ class Controller(polyinterface.Controller):
             sensibo = SensiboAPI(self.api_key)
             devices = sensibo.devices()
             
-            if(self.api_key != 'YourApiKey'):
+            if(self.api_key != ''):
                 for dv in devices:
                     LOGGER.info(dv['id'])
-                    self.addNode(SensiboNode(self, self.address, dv['id'].lower(), dv, sensibo))
+                    if not self.poly.getNode(dv['id'].lower()):
+                        self.poly.addNode(SensiboNode(self.poly, self.address, dv['id'].lower(), dv, sensibo))
 
         except(err):
             LOGGER.info('Scanning fail', err)
@@ -67,36 +50,13 @@ class Controller(polyinterface.Controller):
         self.scanning = False
 
     def stop(self):
-        self.setDriver('ST', 0)
         LOGGER.info('Sensibo NodeServer Stopped')
-
-    def check_params(self):
-        if('api_key' in self.polyConfig['customParams']):
-            self.api_key = self.polyConfig['customParams']['api_key']
-
-        self.removeNoticesAll()
-        self.addCustomParam({'api_key': self.api_key})
-
-        if(self.api_key == 'YourApiKey'):
-            self.addNotice('Please define Sensibo API key')
-        else:
-            self.discover()
-        
-        self.reportDrivers()
-
-    def update(self, data):
-        pass
-
-    id = 'controller'
-    drivers = [{'driver': 'ST', 'value': 0, 'uom': 2}]
-    commands = {'DISCOVER': discover}
-
 
 if __name__ == '__main__':
     try:
-        polyglot = polyinterface.Interface('SensiboNodeServer')
-        polyglot.start()
-        control = Controller(polyglot)
-        control.runForever()
+        polyglot = udi_interface.Interface('SensiboNodeServer')
+        polyglot.start('2.0.0')
+        Controller(polyglot)
+        polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
         sys.exit(0)
