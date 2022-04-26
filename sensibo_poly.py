@@ -10,13 +10,16 @@ LOGGER = udi_interface.LOGGER
 class Controller(object):
     def __init__(self, polyglot):
         super(Controller, self).__init__()
+        self.poly = polyglot
         self.name = 'Sensibo Controller'
         self.api_key = ''
         self.scanning = False
-        self.poly = polyglot
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, self.parameterHandler)
         polyglot.subscribe(polyglot.DISCOVER, self.discover)
+
+        polyglot.updateProfile()
+        polyglot.ready()
     
     def parameterHandler(self, params):
         self.poly.Notices.clear()
@@ -25,6 +28,7 @@ class Controller(object):
             self.api_key = params['api_key']
             self.discover()
         else:
+            LOGGER.info('Missing api_key value.')
             self.poly.Notices['api'] = 'Please define Sensibo API key'
 
 
