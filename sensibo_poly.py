@@ -9,7 +9,7 @@ LOGGER = udi_interface.LOGGER
 
 class Controller(object):
     def __init__(self, polyglot):
-        super(Controller, self).__init__(polyglot)
+        super(Controller, self).__init__()
         self.name = 'Sensibo Controller'
         self.api_key = ''
         self.scanning = False
