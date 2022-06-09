@@ -46,7 +46,7 @@ class Controller(object):
                     if not self.poly.getNode(dv['id'].lower()):
                         self.poly.addNode(SensiboNode(self.poly, dv['id'].lower(), dv['id'].lower(), dv, sensibo))
 
-        except Exception as err
+        except Exception as err:
             LOGGER.info('Scanning fail', err)
         else:
             LOGGER.info('Scanning finished')
