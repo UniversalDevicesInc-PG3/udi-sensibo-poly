@@ -44,9 +44,9 @@ class Controller(object):
                 for dv in devices:
                     LOGGER.info(dv['id'])
                     if not self.poly.getNode(dv['id'].lower()):
-                        self.poly.addNode(SensiboNode(self.poly, self.address, dv['id'].lower(), dv, sensibo))
+                        self.poly.addNode(SensiboNode(self.poly, dv['id'].lower(), dv['id'].lower(), dv, sensibo))
 
-        except(err):
+        except exception as err
             LOGGER.info('Scanning fail', err)
         else:
             LOGGER.info('Scanning finished')
@@ -59,7 +59,7 @@ class Controller(object):
 if __name__ == '__main__':
     try:
         polyglot = udi_interface.Interface('SensiboNodeServer')
-        polyglot.start('2.0.0')
+        polyglot.start('2.0.1')
         Controller(polyglot)
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
