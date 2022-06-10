@@ -26,7 +26,7 @@ class SensiboAPI:
         return response.json()
 
     def device(self, id, fields="*"):
-        response = self._get('/pods/%s' % id)
+        response = self._get('/pods/%s' % id, fields = fields)
         return response['result']
 
     def devices(self, fields='*'):

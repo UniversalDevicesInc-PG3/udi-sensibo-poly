@@ -4,7 +4,8 @@
     </editor>
 
     <editor id="temperature">
-        <range uom="56" min="18" max="30" prec="0" step="1" />
+        <range uom="4" min="18" max="30" prec="0" step="1" />
+        <range uom="17" min="50" max="88" prec="0" step="1" />
     </editor>
 
     <editor id="fan">
