@@ -17,7 +17,7 @@
     </editor>
 
     <editor id="mode">
-        <range uom="25" subset="0-2" nls="MODE" />
+        <range uom="25" subset="0-4" nls="MODE" />
     </editor>
 
     <editor id="power">

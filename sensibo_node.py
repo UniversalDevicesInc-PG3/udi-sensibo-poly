@@ -4,7 +4,18 @@ LOGGER = udi_interface.LOGGER
 
 FAN_LEVEL = ["low", "medium", "high", "auto", "not supported"]
 MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
-MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
+
+# Not sure about this. Shouldn't this match modes above?
+#MODE-0 = Cool
+#MODE-1 = Heat
+#MODE-2 = Fan
+#MODE-3 = Dry
+#MODE-4 = Auto
+
+#MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
+#
+# Try this instead???
+MODE_COUNTER = { 'cool': 0, 'heat': 1, 'fan': 2, 'dry': 3, 'auto': 4 }
 
 class SensiboNode(udi_interface.Node):
     def __init__(self, polyglot, primary, address, data, api):
