@@ -81,10 +81,13 @@ class SensiboNode(udi_interface.Node):
         # target temp units should match temperatureUnit
         self.setDriver('GV2', data['acState']['targetTemperature'], uom=temp_uom)
 
-        if(data['acState']['fanLevel'] in FAN_LEVEL):
-            self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
-        else:
-            self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
+        try:
+            if(data['acState']['fanLevel'] in FAN_LEVEL):
+                self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
+            else:
+                self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
+        except:
+                self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
 
     def _changeProperty(self, property, value):
         return self.api.update(self.deviceId, self.data['acState'], property, value)
