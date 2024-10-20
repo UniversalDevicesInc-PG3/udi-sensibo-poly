@@ -59,7 +59,7 @@ class Controller(object):
 if __name__ == '__main__':
     try:
         polyglot = udi_interface.Interface('SensiboNodeServer')
-        polyglot.start('2.0.5')
+        polyglot.start('2.0.6')
         Controller(polyglot)
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
