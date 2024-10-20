@@ -22,11 +22,13 @@ CMD-sensibo-DON-NAME = On
 CMD-sensibo-DOF-NAME = Off
 
 # FAN enumerators
-FAN-0 = Low
-FAN-1 = Medium
-FAN-2 = High
-FAN-3 = Auto
-FAN-4 = Not Supported
+FAN-0 = Quiet
+FAN-1 = Low
+FAN-2 = Medium
+FAN-3 = High
+FAN-4 = Auto
+FAN-5 = Strong
+FAN-6 = Not Supported
 
 # POWER enumerators
 POWER-0 = Off

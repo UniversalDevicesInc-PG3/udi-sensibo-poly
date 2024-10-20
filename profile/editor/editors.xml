@@ -9,7 +9,7 @@
     </editor>
 
     <editor id="fan">
-        <range uom="25" subset="0-3" nls="FAN" />
+        <range uom="25" subset="0-6" nls="FAN" />
     </editor>
 
     <editor id="humidity">

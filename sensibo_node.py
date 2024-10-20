@@ -2,7 +2,8 @@ import udi_interface
 
 LOGGER = udi_interface.LOGGER
 
-FAN_LEVEL = ["low", "medium", "high", "auto", "not supported"]
+#Fan levels: quiet, low, medium, high, auto strong
+FAN_LEVEL = ["quiet", "low", "medium", "high", "auto", "strong", "not supported"]
 MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
 
 # Not sure about this. Shouldn't this match modes above?
@@ -85,9 +86,11 @@ class SensiboNode(udi_interface.Node):
             if(data['acState']['fanLevel'] in FAN_LEVEL):
                 self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
             else:
+                LOGGER.debug('fanLevel {} is not known'.format(data['acState']['fanLevel']))
                 self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
         except:
-                self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
+            LOGGER.debug('fanLevel not present in acState')
+            self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
 
     def _changeProperty(self, property, value):
         return self.api.update(self.deviceId, self.data['acState'], property, value)
