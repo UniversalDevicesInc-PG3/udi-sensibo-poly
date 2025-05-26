@@ -16,7 +16,7 @@ MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
 #MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
 #
 # Try this instead???
-MODE_COUNTER = { 'cool': 0, 'heat': 1, 'fan': 2, 'dry': 3, 'auto': 4 }
+MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6, 'dry': 8, 'auto': 3 }
 
 class SensiboNode(udi_interface.Node):
     def __init__(self, polyglot, primary, address, data, api):
@@ -80,7 +80,14 @@ class SensiboNode(udi_interface.Node):
         self.setDriver('GV1', data['connectionStatus']['lastSeen']['secondsAgo'])
 
         # target temp units should match temperatureUnit
-        self.setDriver('GV2', data['acState']['targetTemperature'], uom=temp_uom)
+        try:
+            if('targetTemperature' in data['acState']:
+                self.setDriver('GV2', data['acState']['targetTemperature'], uom=temp_uom)
+            else:
+               LOGGER.debug('targetTemperature not available')
+        except:
+               LOGGER.error('Failed to set target temperature')
+
 
         try:
             if(data['acState']['fanLevel'] in FAN_LEVEL):
