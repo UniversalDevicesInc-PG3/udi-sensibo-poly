@@ -81,7 +81,7 @@ class SensiboNode(udi_interface.Node):
 
         # target temp units should match temperatureUnit
         try:
-            if('targetTemperature' in data['acState']:
+            if 'targetTemperature' in data['acState']:
                 self.setDriver('GV2', data['acState']['targetTemperature'], uom=temp_uom)
             else:
                LOGGER.debug('targetTemperature not available')
