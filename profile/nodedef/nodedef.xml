@@ -14,19 +14,33 @@
     <nodeDef id="sensibo" nls="sensibo">
         <editors />
         <sts>
+            <st id="ST" editor="temperature" />
             <st id="GV0" editor="bool" />
             <st id="GV1" editor="seconds" />
             <st id="CLISPC" editor="temperature" />
             <st id="CLISPH" editor="temperature" />
-            <st id="ST" editor="power" />
-            <st id="CLIFRS" editor="fanmode" />
-            <st id="CLITEMP" editor="temperature" />
+            <st id="GV2" editor="power" />
+            <st id="CLIFS" editor="fanmode" />
             <st id="CLIHUM" editor="humidity" />
             <st id="CLIMD" editor="mode" />
         </sts>
         <cmds>
             <sends />
             <accepts>
+                <cmd id="CLISPH">
+                  <p id="" editor="temperature" init="CLISPH" />
+                </cmd>
+                <cmd id="CLISPC">
+                  <p id="" editor="temperature" init="CLISPC" />
+                </cmd>
+                <cmd id="CLIMD">
+                  <p id="" editor="mode" init="CLIMD" />
+                </cmd>
+                <cmd id="CLIFS">
+                  <p id="" editor="fanmode" init="CLIFS" />
+                </cmd>
+                <cmd id="BRT" />
+                <cmd id="DIM" />
                 <cmd id="DON" />
                 <cmd id="DOF" />
                 <cmd id="SET_TEMPERATURE">

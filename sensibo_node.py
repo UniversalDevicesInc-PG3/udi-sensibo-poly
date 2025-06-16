@@ -66,9 +66,9 @@ class SensiboNode(udi_interface.Node):
             temp_uom = 17
             temp = round(((temp * 9) / 5) + 32, 1)
 
-        self.setDriver('ST', 1 if data['acState']['on'] else 0)
+        self.setDriver('GV2', 1 if data['acState']['on'] else 0)
         # target temp units should match temperatureUnit
-        self.setDriver('CLITEMP', temp, uom=temp_uom )
+        self.setDriver('ST', temp, uom=temp_uom )
         self.setDriver('CLIHUM', data['measurements']['humidity'], uom=51)
         self.setDriver('CLIMD', MODE_COUNTER[data['acState']['mode']])
         self.setDriver('GV0', 1 if data['connectionStatus']['isAlive'] else 0)
@@ -88,13 +88,13 @@ class SensiboNode(udi_interface.Node):
 
         try:
             if(data['acState']['fanLevel'] in FAN_LEVEL):
-                self.setDriver('CLIFRS', FAN_LEVEL.index(data['acState']['fanLevel']))
+                self.setDriver('CLIFS', FAN_LEVEL.index(data['acState']['fanLevel']))
             else:
                 LOGGER.debug('fanLevel {} is not known'.format(data['acState']['fanLevel']))
-                self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
+                self.setDriver('CLIFS', FAN_LEVEL.index("not supported"))
         except:
             LOGGER.debug('fanLevel not present in acState')
-            self.setDriver('CLIFRS', FAN_LEVEL.index("not supported"))
+            self.setDriver('CLIFS', FAN_LEVEL.index("not supported"))
 
     def _changeProperty(self, property, value):
         return self.api.update(self.deviceId, self.data['acState'], property, value)
@@ -102,14 +102,14 @@ class SensiboNode(udi_interface.Node):
     def setOn(self, param):
         try:
             self._changeProperty('on', True)
-            self.setDriver('ST', 1)
+            self.setDriver('GV2', 1)
         except:
             LOGGER.debug('SET ON: communication fail')
 
     def setOff(self, param):
         try:
             self._changeProperty('on', False)
-            self.setDriver('ST', 0)
+            self.setDriver('GV2', 0)
         except:
             LOGGER.debug('SET OFF: communication fail')
 
@@ -138,7 +138,7 @@ class SensiboNode(udi_interface.Node):
     def setFan(self, param):
         try:
             self._changeProperty('fanLevel', FAN_LEVEL[int(param['value'])])
-            self.setDriver('CLIFRS', int(param['value']))
+            self.setDriver('CLIFS', int(param['value']))
         except:
             LOGGER.debug('SET FAN: communication fail')
 
@@ -149,22 +149,33 @@ class SensiboNode(udi_interface.Node):
         except:
             LOGGER.debug('SET MODE: communication fail')
 
+    def adjTemperature(self, param):
+        try:
+            LOGGER.debug('increment or decrement temp: {}'.format(param))
+        except:
+            LOGGER.error('temperature adjustment failed')
+
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 25, 'name':'State'},       # device state
+            {'driver': 'ST', 'value': 0, 'uom': 4, 'name':'Temperature'},       # current temp
             {'driver': 'GV0', 'value': 0, 'uom': 2, 'name':'Connection'},       # connection status
             {'driver': 'GV1', 'value': 0, 'uom': 57, 'name':'Last Update'},      # connection last seen
             {'driver': 'CLISPC', 'value': 0, 'uom': 4, 'name':'Target Temp'},      # setpoint
             {'driver': 'CLISPH', 'value': 0, 'uom': 4, 'name':'Target Temp'},      # setpoint
-            {'driver': 'CLIFRS', 'value': 0, 'uom': 68, 'name':'Fan Mode'},
-            {'driver': 'CLITEMP', 'value': 10, 'uom': 4, 'name':'Temperature'},
+            {'driver': 'CLIFS', 'value': 0, 'uom': 68, 'name':'Fan Mode'},
+            {'driver': 'GV2', 'value': 0, 'uom': 25, 'name':'Power'},
             {'driver': 'CLIHUM', 'value': 0, 'uom': 51, 'name':'Humidity'},
             {'driver': 'CLIMD', 'value': 0, 'uom': 67, 'name':'Mode'},
-            {'driver': 'PWR', 'value': 0, 'uom': 25, 'name':'Power'}
     ]
 
     id = 'sensibo'
 
     commands = {
+        'CLISPC': setTemperature,
+        'CLISPH': setTemperature,
+        'CLIMD': setMode,
+        'CLIFS': setFan,
+        'BRT': adjTemperature,
+        'DIM': adjTemperature,
         'DON': setOn,
         'DOF': setOff,
         'SET_TEMPERATURE': setTemperature,
