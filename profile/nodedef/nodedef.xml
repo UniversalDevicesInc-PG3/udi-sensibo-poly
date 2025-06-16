@@ -16,9 +16,10 @@
         <sts>
             <st id="GV0" editor="bool" />
             <st id="GV1" editor="seconds" />
-            <st id="GV2" editor="temperature" />
+            <st id="CLISPC" editor="temperature" />
+            <st id="CLISPH" editor="temperature" />
             <st id="ST" editor="power" />
-            <st id="CLIFRS" editor="fan" />
+            <st id="CLIFRS" editor="fanmode" />
             <st id="CLITEMP" editor="temperature" />
             <st id="CLIHUM" editor="humidity" />
             <st id="CLIMD" editor="mode" />
@@ -32,7 +33,7 @@
                     <p id="" editor="temperature" />
                 </cmd>
                 <cmd id="SET_FAN">
-                    <p id="" editor="fan" />
+                    <p id="" editor="fanmode" />
                 </cmd>
                 <cmd id="SET_MODE">
                     <p id="" editor="mode" />

@@ -2,21 +2,16 @@ import udi_interface
 
 LOGGER = udi_interface.LOGGER
 
-#Fan levels: quiet, low, medium, high, auto strong
-FAN_LEVEL = ["quiet", "low", "medium", "high", "auto", "strong", "not supported"]
-MODES = ['cool', 'heat', 'fan', 'dry', 'auto']
+# Translate fan mode to Sensibo fan
+FAN_LEVEL = ["auto", "on", "", "high", "", "medium", "", "", "", "", "quiet", "low", "strong", "not supported"]
+#FAN_LEVEL = ["quiet", "low", "medium", "high", "auto", "strong", "not supported"]
 
-# Not sure about this. Shouldn't this match modes above?
-#MODE-0 = Cool
-#MODE-1 = Heat
-#MODE-2 = Fan
-#MODE-3 = Dry
-#MODE-4 = Auto
-
-#MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6 }
-#
-# Try this instead???
+# Translate Sensibo mode string to thermostat mode value
 MODE_COUNTER = { 'cool': 2, 'heat': 1, 'fan': 6, 'dry': 8, 'auto': 3 }
+
+# Translate thermostat mode number to Sensibo mode string
+MODES = ['', 'heat', 'cool', 'auto', '', '', 'fan', '', 'dry']
+
 
 class SensiboNode(udi_interface.Node):
     def __init__(self, polyglot, primary, address, data, api):
@@ -82,7 +77,9 @@ class SensiboNode(udi_interface.Node):
         # target temp units should match temperatureUnit
         try:
             if 'targetTemperature' in data['acState']:
-                self.setDriver('GV2', data['acState']['targetTemperature'], uom=temp_uom)
+                # Only one setpoint so set both??
+                self.setDriver('CLISPC', data['acState']['targetTemperature'], uom=temp_uom)
+                self.setDriver('CLISPH', data['acState']['targetTemperature'], uom=temp_uom)
             else:
                LOGGER.debug('targetTemperature not available')
         except:
@@ -127,7 +124,8 @@ class SensiboNode(udi_interface.Node):
         '''
         try:
             temp = int(param['value'])
-            self.setDriver('GV2', temp, uom=param['uom'])
+            self.setDriver('CLISPH', temp, uom=param['uom'])
+            self.setDriver('CLISPC', temp, uom=param['uom'])
 
             if param['uom'] == 17:
                 # expects temp in C?
@@ -147,20 +145,21 @@ class SensiboNode(udi_interface.Node):
     def setMode(self, param):
         try:
             self._changeProperty('mode', MODES[int(param['value'])])
-            self.setDriver('CLIMD', MODE_COUNTER[MODES[int(param['value'])]])
+            self.setDriver('CLIMD', int(param['value']))
         except:
             LOGGER.debug('SET MODE: communication fail')
 
     drivers = [
-        {'driver': 'ST', 'value': 0, 'uom': 25},       # device state
-        {'driver': 'GV0', 'value': 0, 'uom': 2},       # connection status
-        {'driver': 'GV1', 'value': 0, 'uom': 57},      # connection last seen
-        {'driver': 'GV2', 'value': 0, 'uom': 4},      # target temperature
-        {'driver': 'CLIFRS', 'value': 0, 'uom': 25},
-        {'driver': 'CLITEMP', 'value': 10, 'uom': 4},
-        {'driver': 'CLIHUM', 'value': 0, 'uom': 51},
-        {'driver': 'CLIMD', 'value': 0, 'uom': 67},
-        {'driver': 'PWR', 'value': 0, 'uom': 25}
+            {'driver': 'ST', 'value': 0, 'uom': 25, 'name':'State'},       # device state
+            {'driver': 'GV0', 'value': 0, 'uom': 2, 'name':'Connection'},       # connection status
+            {'driver': 'GV1', 'value': 0, 'uom': 57, 'name':'Last Update'},      # connection last seen
+            {'driver': 'CLISPC', 'value': 0, 'uom': 4, 'name':'Target Temp'},      # setpoint
+            {'driver': 'CLISPH', 'value': 0, 'uom': 4, 'name':'Target Temp'},      # setpoint
+            {'driver': 'CLIFRS', 'value': 0, 'uom': 68, 'name':'Fan Mode'},
+            {'driver': 'CLITEMP', 'value': 10, 'uom': 4, 'name':'Temperature'},
+            {'driver': 'CLIHUM', 'value': 0, 'uom': 51, 'name':'Humidity'},
+            {'driver': 'CLIMD', 'value': 0, 'uom': 67, 'name':'Mode'},
+            {'driver': 'PWR', 'value': 0, 'uom': 25, 'name':'Power'}
     ]
 
     id = 'sensibo'

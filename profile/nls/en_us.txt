@@ -21,6 +21,22 @@ CMD-sensibo-SET_MODE-NAME = Set Mode
 CMD-sensibo-DON-NAME = On
 CMD-sensibo-DOF-NAME = Off
 
+# Thermostat FAN modes + Sensibo extensions
+SFAN-0 = Auto
+SFAN-1 = On
+SFAN-2 = Auto High
+SFAN-3 = High
+SFAN-4 = Auto Medium
+SFAN-5 = Medium
+SFAN-6 = Circulation
+SFAN-7 = Humidity Circulation
+SFAN-8 = Left & Right Circulation
+SFAN-9 = Up & Down Circulation
+SFAN-10 = Quiet
+SFAN-11 = Low
+SFAN-12 = Strong
+SFAN-13 = Not Supported
+
 # FAN enumerators
 FAN-0 = Quiet
 FAN-1 = Low
