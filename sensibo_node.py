@@ -104,6 +104,8 @@ class SensiboNode(udi_interface.Node):
             if 'filtersCleaning' in data:
                 if 'shouldCleanFilters' in data['filtersCleaning']:
                     self.setDriver('GV3', data['filtersCleaning']['shouldCleanFilters'])
+        except Exception as e:
+            LOGGER.debug('Filter cleaning error {}'.format(e))
 
 
     def _changeProperty(self, property, value):
