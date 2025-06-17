@@ -21,6 +21,8 @@ class SensiboNode(udi_interface.Node):
         self.deviceId = data['id']
         self.data = data
         self._update(data)
+        self._cur_target = 0
+        self.temp_uom
 
         polyglot.subscribe(polyglot.POLL, self.update)
 
@@ -61,14 +63,14 @@ class SensiboNode(udi_interface.Node):
         temp = data['measurements']['temperature']
 
         if data['temperatureUnit'] == 'C':
-            temp_uom = 4
+            self.temp_uom = 4
         else:
-            temp_uom = 17
+            self.temp_uom = 17
             temp = round(((temp * 9) / 5) + 32, 1)
 
         self.setDriver('GV2', 1 if data['acState']['on'] else 0)
         # target temp units should match temperatureUnit
-        self.setDriver('ST', temp, uom=temp_uom )
+        self.setDriver('ST', temp, uom=self.temp_uom )
         self.setDriver('CLIHUM', data['measurements']['humidity'], uom=51)
         self.setDriver('CLIMD', MODE_COUNTER[data['acState']['mode']])
         self.setDriver('GV0', 1 if data['connectionStatus']['isAlive'] else 0)
@@ -77,9 +79,11 @@ class SensiboNode(udi_interface.Node):
         # target temp units should match temperatureUnit
         try:
             if 'targetTemperature' in data['acState']:
+                self._cur_target = data['acState']['targetTemperature']
+
                 # Only one setpoint so set both??
-                self.setDriver('CLISPC', data['acState']['targetTemperature'], uom=temp_uom)
-                self.setDriver('CLISPH', data['acState']['targetTemperature'], uom=temp_uom)
+                self.setDriver('CLISPC', data['acState']['targetTemperature'], uom=self.temp_uom)
+                self.setDriver('CLISPH', data['acState']['targetTemperature'], uom=self.temp_uom)
             else:
                LOGGER.debug('targetTemperature not available')
         except:
@@ -95,6 +99,12 @@ class SensiboNode(udi_interface.Node):
         except:
             LOGGER.debug('fanLevel not present in acState')
             self.setDriver('CLIFS', FAN_LEVEL.index("not supported"))
+
+        try:
+            if 'filtersCleaning' in data:
+                if 'shouldCleanFilters' in data['filtersCleaning']:
+                    self.setDriver('GV3', data['filtersCleaning']['shouldCleanFilters'])
+
 
     def _changeProperty(self, property, value):
         return self.api.update(self.deviceId, self.data['acState'], property, value)
@@ -126,6 +136,7 @@ class SensiboNode(udi_interface.Node):
             temp = int(param['value'])
             self.setDriver('CLISPH', temp, uom=param['uom'])
             self.setDriver('CLISPC', temp, uom=param['uom'])
+            self._cur_target = temp
 
             if param['uom'] == 17:
                 # expects temp in C?
@@ -151,7 +162,21 @@ class SensiboNode(udi_interface.Node):
 
     def adjTemperature(self, param):
         try:
-            LOGGER.debug('increment or decrement temp: {}'.format(param))
+            if param['cmd'] == 'BRT':
+                self._cur_target += 1
+            elif param['cmd'] == 'DIM':
+                self._cur_target -= 1
+
+            temp = self._cur_target
+
+            # if our temperature unit is F, convert to C for API
+            if self.temp_uom == 17:
+                # expects temp in C?
+                temp = round(((self._cur_target - 32) * 5) / 9, 0)
+            self._changeProperty('targetTemperature', temp)
+
+            self.setDriver('CLISPC', self._cur_target, uom=self.temp_uom)
+            self.setDriver('CLISPH', self._cur_target, uom=self.temp_uom)
         except:
             LOGGER.error('temperature adjustment failed')
 
@@ -165,6 +190,7 @@ class SensiboNode(udi_interface.Node):
             {'driver': 'GV2', 'value': 0, 'uom': 25, 'name':'Power'},
             {'driver': 'CLIHUM', 'value': 0, 'uom': 51, 'name':'Humidity'},
             {'driver': 'CLIMD', 'value': 0, 'uom': 67, 'name':'Mode'},
+            {'driver': 'GV3', 'value': 0, 'uom': 2, 'name':'FilterChange'},
     ]
 
     id = 'sensibo'
@@ -178,7 +204,4 @@ class SensiboNode(udi_interface.Node):
         'DIM': adjTemperature,
         'DON': setOn,
         'DOF': setOff,
-        'SET_TEMPERATURE': setTemperature,
-        'SET_FAN': setFan,
-        'SET_MODE': setMode
     }

@@ -17,11 +17,14 @@ ST-sensibo-GV0-NAME = Sensibo Online
 ST-sensibo-GV1-NAME = Last Seen
 ST-sensibo-CLISPC-NAME = Target Temperature
 ST-sensibo-CLISPH-NAME = Target Temperature
+ST-sensibo-GV3-NAME = Replace Filter
 CMD-sensibo-SET_TEMPERATURE-NAME = Set Temperature
 CMD-sensibo-SET_FAN-NAME = Set Fan Level
 CMD-sensibo-SET_MODE-NAME = Set Mode
 CMD-sensibo-DON-NAME = On
 CMD-sensibo-DOF-NAME = Off
+CMD-sensibo-DIM-NAME = Target Down
+CMD-sensibo-BRT-NAME = Target Up
 
 # Thermostat FAN modes + Sensibo extensions
 SFAN-0 = Auto
@@ -58,3 +61,7 @@ MODE-1 = Heat
 MODE-2 = Fan
 MODE-3 = Dry
 MODE-4 = Auto
+
+# FILTER
+FILTER-0 = No
+FILTER-1 = Yes

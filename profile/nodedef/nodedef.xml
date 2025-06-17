@@ -23,6 +23,7 @@
             <st id="CLIFS" editor="fanmode" />
             <st id="CLIHUM" editor="humidity" />
             <st id="CLIMD" editor="mode" />
+            <st id="GV3" editor="filter" />
         </sts>
         <cmds>
             <sends />
